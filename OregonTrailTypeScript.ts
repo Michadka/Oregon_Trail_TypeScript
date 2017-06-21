@@ -4,8 +4,10 @@
     * Interfaces
     */
 
-function randNumber(){ //use this to generate all random numbers
-    return Math.round(Math.random() * 100)
+function randNumber(min, max){ //use this to generate all random numbers
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
 
     //interface describing what attributes and methods a traveler should have
@@ -56,12 +58,16 @@ function randNumber(){ //use this to generate all random numbers
     //This is currently in violation of its contract with the interface. 
     //Create the code required to satisfy the contract with the interface
     class Traveler implements ITraveler {
-        food: number;
-        name: string;
+        food: number; //interface forces 'number' so it's not needed bit OK for understanding
+        name: string; //interface forces 'string' so it's not needed bit OK for understanding
         isHealthy = true;
+        constructor(food: number, name: string){ //rules that say what is required when a Traveler is instantiated
+            this.food = food;
+            this.name = name;
+        };
         hunt(){
-            if(randNumber() % 2){
-                this.food = this.food + 100;
+            if(randNumber(1, 100) % 2){
+                this.food = this.food + 100; // or this.food += 100
             }
             return this.food;
         };
@@ -69,15 +75,10 @@ function randNumber(){ //use this to generate all random numbers
              if(this.food <20){
                 this.isHealthy = false;
             }else{
-                this.food = this.food - 20;
+                this.food = this.food - 20;// or this.food -= 20
             }
             return this.isHealthy;
         };
-
-        constructor(food: number, name: string){
-            this.food = food;
-            this.name = name;
-        }
     }
 
     //The wagon class that implements the IWagon interface
@@ -86,15 +87,19 @@ function randNumber(){ //use this to generate all random numbers
     class Wagon implements IWagon {
         capacity: number;
         passengerArray = [];
+        
+        constructor(capacity: number){
+            this.capacity = capacity;
+        };
         // getPassengerArray(){
         //     return this.passengerArray
         // }
         addPassenger(traveler: Traveler){
-            if (this.passengerArray.length > this.capacity){
-                return "sorry"
+            if (this.passengerArray.length >= this.capacity){
+                return "sorry";
             }else{
                 this.passengerArray.push(traveler) //Traveler.name
-                return "added"
+                return "added";
             };
         };
         isQuarantined(){
@@ -102,28 +107,25 @@ function randNumber(){ //use this to generate all random numbers
                 if (!this.passengerArray[i].isHealthy) {
                     return true;
                 }
-                return false;
             }
+            return false;
         };
         getFood(){
             let total = 0;
             for (let i = 0; i < this.passengerArray.length; i++) {
-                total += this.passengerArray[i].food;
+                total += this.passengerArray[i].food;  //same as total = total + array.food
             }
             return total;
         };
 
-        constructor(capacity: number){
-            this.capacity = capacity;
-            this.passengerArray = [];
-        }
+
     }
 
-let T1 = new Traveler(randNumber(), "Sheldon");
-let T2 = new Traveler(randNumber(), "Leonard");
-let T3 = new Traveler(randNumber(), "Rajesh");
-let T4 = new Traveler(randNumber(), "Howard");
-let T5 = new Traveler(randNumber(), "Stuart");
+let T1 = new Traveler(randNumber(1, 100), "Sheldon");
+let T2 = new Traveler(randNumber(1, 100), "Leonard");
+let T3 = new Traveler(randNumber(1, 100), "Rajesh");
+let T4 = new Traveler(randNumber(1, 100), "Howard");
+let T5 = new Traveler(randNumber(1, 100), "Stuart");
 let W1 = new Wagon(4);
 console.log(T1.name + ' was able to eat? ' + T1.eat());
 console.log(T3.name + ' was able to eat? ' + T3.eat());
@@ -131,13 +133,15 @@ console.log(T4.name + ' was able to eat? ' + T5.eat());
 console.log(T2.name + ' has ' + T2.hunt() + ' food!');
 console.log(T4.name + ' has ' + T4.hunt() + ' food!');
 
-    let travelerArray = [T1, T2, T3, T4, T5];
-    for (let x=0; x < travelerArray.length; x++){
-            if(randNumber() % 2){
-                W1.addPassenger(travelerArray[x])
-            }
+let travelerArray = [T1, T2, T3, T4, T5];
+for (let x=0; x < travelerArray.length; x++){
+        if(randNumber(1, 100) % 2){
+            console.log(W1.addPassenger(travelerArray[x]));
+        }else{
+            console.log(travelerArray[x].name + " did not luck out")
+        }
 
-    }
+}
 
 console.log("Are folks in the wagon sick? " + W1.isQuarantined());
 console.log("The total food in the wagon is = " + W1.getFood());

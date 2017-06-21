@@ -2,8 +2,10 @@
     /*
     * Interfaces
     */
-    function randNumber() {
-        return Math.round(Math.random() * 100);
+    function randNumber(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
     }
     /*
     * Classes
@@ -17,9 +19,10 @@
             this.food = food;
             this.name = name;
         }
+        ;
         Traveler.prototype.hunt = function () {
-            if (randNumber() % 2) {
-                this.food = this.food + 100;
+            if (randNumber(1, 100) % 2) {
+                this.food = this.food + 100; // or this.food += 100
             }
             return this.food;
         };
@@ -29,7 +32,7 @@
                 this.isHealthy = false;
             }
             else {
-                this.food = this.food - 20;
+                this.food = this.food - 20; // or this.food -= 20
             }
             return this.isHealthy;
         };
@@ -43,13 +46,13 @@
         function Wagon(capacity) {
             this.passengerArray = [];
             this.capacity = capacity;
-            this.passengerArray = [];
         }
+        ;
         // getPassengerArray(){
         //     return this.passengerArray
         // }
         Wagon.prototype.addPassenger = function (traveler) {
-            if (this.passengerArray.length > this.capacity) {
+            if (this.passengerArray.length >= this.capacity) {
                 return "sorry";
             }
             else {
@@ -64,25 +67,25 @@
                 if (!this.passengerArray[i].isHealthy) {
                     return true;
                 }
-                return false;
             }
+            return false;
         };
         ;
         Wagon.prototype.getFood = function () {
             var total = 0;
             for (var i = 0; i < this.passengerArray.length; i++) {
-                total += this.passengerArray[i].food;
+                total += this.passengerArray[i].food; //same as total = total + array.food
             }
             return total;
         };
         ;
         return Wagon;
     }());
-    var T1 = new Traveler(randNumber(), "Sheldon");
-    var T2 = new Traveler(randNumber(), "Leonard");
-    var T3 = new Traveler(randNumber(), "Rajesh");
-    var T4 = new Traveler(randNumber(), "Howard");
-    var T5 = new Traveler(randNumber(), "Stuart");
+    var T1 = new Traveler(randNumber(1, 100), "Sheldon");
+    var T2 = new Traveler(randNumber(1, 100), "Leonard");
+    var T3 = new Traveler(randNumber(1, 100), "Rajesh");
+    var T4 = new Traveler(randNumber(1, 100), "Howard");
+    var T5 = new Traveler(randNumber(1, 100), "Stuart");
     var W1 = new Wagon(4);
     console.log(T1.name + ' was able to eat? ' + T1.eat());
     console.log(T3.name + ' was able to eat? ' + T3.eat());
@@ -91,8 +94,11 @@
     console.log(T4.name + ' has ' + T4.hunt() + ' food!');
     var travelerArray = [T1, T2, T3, T4, T5];
     for (var x = 0; x < travelerArray.length; x++) {
-        if (randNumber() % 2) {
-            W1.addPassenger(travelerArray[x]);
+        if (randNumber(1, 100) % 2) {
+            console.log(W1.addPassenger(travelerArray[x]));
+        }
+        else {
+            console.log(travelerArray[x].name + " did not luck out");
         }
     }
     console.log("Are folks in the wagon sick? " + W1.isQuarantined());
